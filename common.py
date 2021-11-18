@@ -230,7 +230,7 @@ def _obj_name_for_decorator(obj: _tA) -> _str:
 	# noinspection PyBroadException
 	try:
 		return obj.__name__
-	except:
+	except Exception:
 		return repr(obj)
 
 
@@ -238,7 +238,7 @@ def _qual_name_for_decorator(obj: _tA) -> _str:
 	# noinspection PyBroadException
 	try:
 		return obj.__qualname__
-	except:
+	except Exception:
 		return _obj_name_for_decorator(obj)
 
 
