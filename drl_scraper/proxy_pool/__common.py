@@ -23,6 +23,7 @@ from common import (
 	StaticDataClass as _StaticDataClass,
 	TrackingABC as _TrackingABC,
 	abc_method_assert as _abc_assert,
+	abc_method_error as _abc_error,
 )
 import drl_enum as _enum
 from drl_pydantic import ValidatorsIfNot as _vNot
@@ -109,21 +110,17 @@ class _AbstractProxyData(_abc.ABC, _BaseModel):
 		raise ProxyCompareError(self, '>=', other)
 
 
-_abc_assert_specific_data = _abc_assert(lambda: _SpecificPoolProxyData)
+_abc_error_specific_data = _abc_error(lambda: _SpecificPoolProxyData)
 
 
 class _SpecificPoolProxyData(_AbstractProxyData):
 	"""Base class for each concrete pool's underlying data."""
 
 	# noinspection PyUnreachableCode
-	@_abc_assert_specific_data
+	@_abc_error_specific_data
 	@_abc.abstractmethod
 	def as_standard(self):
 		"""Represent specific pool data as standard key-value pair for proxy."""
-		raise TypeError(
-			f"{self.__class__.__name__}.as_standard() must be overridden for "
-			f"and called from concrete child classes."
-		)
 		# noinspection PyTypeChecker
 		k: ProxyID = None
 		# noinspection PyTypeChecker
@@ -164,7 +161,6 @@ class ProxyData(_AbstractProxyData):
 		return Anonymity[v]
 
 	_v_raw_data = _vNot('raw_data', pre=True).none
-
 
 	def __eq__(self, other: _AbstractProxyData) -> bool:
 		# TODO
@@ -266,7 +262,7 @@ class ProxyPool(_TrackingABC, _StaticDataClass):
 		and keeping only one instance in the pool with the most recent proxy-data.
 		"""
 		# TODO
-		...
+		raise NotImplementedError()
 
 	@classmethod
 	@_abc_assert_pp
@@ -274,7 +270,7 @@ class ProxyPool(_TrackingABC, _StaticDataClass):
 	def _load(cls):
 		"""Load data from all the sources a given ``ProxyPool`` supports."""
 		# TODO
-		...
+		raise NotImplementedError()
 
 	@classmethod
 	@_abc_assert_pp
@@ -282,7 +278,7 @@ class ProxyPool(_TrackingABC, _StaticDataClass):
 	def _cache(cls):
 		"""Save the ``ProxyPool`` contents to a cache file (JSON)."""
 		# TODO
-		...
+		raise NotImplementedError()
 
 	@classmethod
 	@_abc_assert_pp

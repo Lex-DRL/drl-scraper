@@ -341,7 +341,10 @@ def abc_method_assert(abc_cls_f: _t_abc_cls_f, cls=False, work_on_abc=False, ):
 	)
 
 
-def abc_method_error(abc_cls_f: _t_abc_cls_f, cls=False, work_on_abc=False, ):
+def abc_method_error(
+	abc_cls_f: _t_abc_cls_f, cls=False, work_on_abc=False,
+	error_f: _u[_Tp[Exception], _c[[_str], Exception]] = TypeError,
+):
 	"""
 	Abstract-method decorator raising ``NotImplementedError`` error if the method
 	is called from inherited (concrete) class.
@@ -370,13 +373,18 @@ def abc_method_error(abc_cls_f: _t_abc_cls_f, cls=False, work_on_abc=False, ):
 	:param work_on_abc:
 		if ``True``, Lets you throw an error in inherited class but still use the method
 		in ABC itself. Acts the same as ``@abc_method_work_in_abc``.
+	:param error_f:
+		``Exception`` subclass or factory taking a single string argument (message).
 	"""
+	if not callable(error_f) or issubclass(error_f, Exception):
+		error_f = TypeError
+
 	def child_error(cls_obj: type, error_format_f: _t_abc_error_format_f):
 		if cls_obj is not abc_cls_f():
-			raise TypeError(error_format_f(cls_obj))
+			raise error_f(error_format_f(cls_obj))
 
 	def parent_error(cls_obj: type, error_format_f: _t_abc_error_format_f):
-		raise TypeError(error_format_f(cls_obj))
+		raise error_f(error_format_f(cls_obj))
 
 	return __abc_method_error(
 		child_error, parent_error, abc_cls_f, cls=cls, work_on_abc=work_on_abc
