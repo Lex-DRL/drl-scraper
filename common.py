@@ -376,7 +376,7 @@ def abc_method_error(
 	:param error_f:
 		``Exception`` subclass or factory taking a single string argument (message).
 	"""
-	if not callable(error_f) or issubclass(error_f, Exception):
+	if not(callable(error_f) or issubclass(error_f, Exception)):
 		error_f = TypeError
 
 	def child_error(cls_obj: type, error_format_f: _t_abc_error_format_f):
