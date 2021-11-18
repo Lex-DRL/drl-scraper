@@ -132,6 +132,7 @@ class UserAgentPool(_StaticDataClass):
 
 		return tuple(_random.sample(chosen_from, n))
 
+
 if __name__ == '__main__':
 	test_n = 20
 	best = UserAgentPool.n_most_popular(test_n)
