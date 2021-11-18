@@ -1,0 +1,66 @@
+﻿# Based on: https://github.com/Lex-DRL/git-template-gamedev
+
+# Auto-detect text/binary by default:
+* 	text=auto eol=lf
+
+# raw-Text files
+*.[Cc][Ss][Vv] text
+*.[Mm][Dd] text
+*.[Tt][Xx][Tt] text
+
+# Checksums
+*.[Mm][Dd]5 text
+*.[Ss][Hh][Aa] text
+*.[Ss][Hh][Aa][0123456789]* text
+
+# Scripts: OS
+*.[Bb][Aa][Tt] text
+*.[Cc][Mm][Dd] text
+*.[Pp][Ll] text
+*.[Pp][Ss]1 text
+*.[Ss][Hh] text
+
+# Scripts: various Programming languages
+*.[Cc][Ss] diff=csharp text
+*.[Cc][Ss][Ss] diff=css text
+*.[Hh] text
+*.[Hh][Tt][Mm] diff=html text
+*.[Hh][Tt][Mm][Ll] diff=html text
+*.[Jj][Ss] text
+*.[Jj][Ss][Oo][Nn] text
+*.[Pp][Hh][Pp] text
+*.[Pp][Yy] diff=python text
+*.[Ss][Qq][Ll] text=auto eol=lf
+*.[Xx][Mm][Ll] diff=html text
+*.[Xx][Hh][Tt][Mm][Ll] diff=html text
+
+# Vector graphics
+*.[Ss][Vv][Gg] text
+*.[Aa][Ii] text
+
+
+# =========================================================================== #
+# 	LFS binary formats
+# =========================================================================== #
+
+*.[Dd][Bb] filter=lfs diff=lfs merge=lfs -text
+*.[Mm][Dd][Bb] filter=lfs diff=lfs merge=lfs -text
+*.[Pp][Dd][Tt] filter=lfs diff=lfs merge=lfs -text
+
+# Archives
+*.7[Zz] filter=lfs diff=lfs merge=lfs -text
+*.[Gg][Zz] filter=lfs diff=lfs merge=lfs -text
+*.[Zz][Ii][Pp] filter=lfs diff=lfs merge=lfs -text
+*.[AaJjRrTt][Aa][Rr] filter=lfs diff=lfs merge=lfs -text
+
+# OS libraries
+*.[Dd][Ll][Ll] filter=lfs diff=lfs merge=lfs -text
+*.[Ee][Xx][Ee] filter=lfs diff=lfs merge=lfs -text
+*.[Ss][Oo] filter=lfs diff=lfs merge=lfs -text
+*.[Ss][Yy][Ss] filter=lfs diff=lfs merge=lfs -text
+*.[Bb][Yy][Tt][Ee][Ss] filter=lfs diff=lfs merge=lfs -text
+
+# Python binaries:
+*.[Pp][Yy][Dd] filter=lfs diff=lfs merge=lfs -text
+*.[Pp][Dd][Bb] filter=lfs diff=lfs merge=lfs -text
+*.[Ww][Hh][Ll] filter=lfs diff=lfs merge=lfs -text
