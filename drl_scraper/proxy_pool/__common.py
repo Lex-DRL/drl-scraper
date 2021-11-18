@@ -156,6 +156,7 @@ class ProxyData(_AbstractProxyData):
 	_v_uptime_when_worked = _vNot('uptime_when_worked', pre=True).value_factory(UpTime)
 	_v_reported_speed = _vNot('reported_speed', pre=True).int
 
+	# noinspection PyMethodParameters
 	@_v('anon', pre=True)
 	def _v_anon(cls, v):
 		return Anonymity[v]
@@ -209,6 +210,12 @@ class ProxyPool(_TrackingABC, _StaticDataClass):
 			classes = _chain([cls], classes)
 		return tuple(classes)
 
+	@staticmethod
+	def __pool_sort_key(item):
+		item: _tpl[_Tp[ProxyPool], _pp_dict] = item
+		pool, pool_dict = item
+		return pool._pool_class_priority
+
 	@classmethod
 	def __all_standard_pools(cls):
 		"""
@@ -221,10 +228,7 @@ class ProxyPool(_TrackingABC, _StaticDataClass):
 			[(cls, cls.__combined_pool)],
 			((c, c._as_standard_pool()) for c in cls.__all_classes(False))
 		))
-		all_pools = sorted(
-			all_pools, key=lambda x: x[0]._pool_class_priority
-		)
-		return tuple(all_pools)
+		return tuple(sorted(all_pools, key=cls.__pool_sort_key))
 
 	@classmethod
 	@_abc_assert_pp
