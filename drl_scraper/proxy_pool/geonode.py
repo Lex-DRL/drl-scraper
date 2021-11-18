@@ -66,6 +66,7 @@ class GeoNodeProxyData(_SpecificPoolProxyData):
 	_v_host = _vNot('host', pre=True).str
 	_v_id = _vNot('id', pre=True).str
 
+	# noinspection PyMethodParameters
 	@_v('anon', pre=True)
 	def _v_anon(cls, v):
 		return Anonymity[v]
