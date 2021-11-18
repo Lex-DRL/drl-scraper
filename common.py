@@ -260,6 +260,7 @@ def __abc_method_error(
 	takes ``self``)* and another function that formats error message from it.
 	"""
 	if work_on_abc:
+		# noinspection PyUnusedLocal
 		def dummy_error_f(cls_obj: type, error_format_f: _t_abc_error_format_f):
 			pass
 		parent_error_f = dummy_error_f
