@@ -65,11 +65,15 @@ class TrackingMeta(type):
 	*
 		otherwise (if you use other meta-class, even indirectly),
 		you need to create a combined metaclass first (multiple
-		inheritance, `TrackingMeta` being the last) and use it instead.
+		inheritance, test which order works best) and use it instead.
 	*
 		To use it with ABC, there are pre-defined `TrackingABCMeta` and
-		`TrackingABC` classes.
+		`TrackingABC` classes here.
 	"""
+
+	@staticmethod
+	def __class_names_excluded_from_tracking():
+		return {'TrackingMeta', 'TrackingABCMeta', 'TrackingABC'}
 
 	def __new__(mcs, *args, **kwargs):
 		cls = super().__new__(mcs, *args, **kwargs)
@@ -81,30 +85,87 @@ class TrackingMeta(type):
 		except AttributeError:
 			children_dict: _t_track_hierarchy = dict()
 			mcs.__children_by_class = children_dict
+
+		try:
+			parents_dict: _t_track_hierarchy = mcs.__parents_by_class
+		except AttributeError:
+			parents_dict: _t_track_hierarchy = dict()
+			mcs.__parents_by_class = parents_dict
+
+		# common (metaclass) internal initialisation done
+
+		def cls_nm(_cls):
+			# noinspection PyBroadException
+			try:
+				return _cls.__name__
+			except Exception:
+				return None
+
+		def cls_module(_cls):
+			# noinspection PyBroadException
+			try:
+				return _cls.__module__
+			except Exception:
+				return None
+
+		excluded_classes = mcs.__class_names_excluded_from_tracking()
+		mcs_module = cls_module(mcs)
+
+		def is_excluded(_cls):
+			return cls_nm(_cls) in excluded_classes and cls_module(_cls) == mcs_module
+
+		if is_excluded(cls):
+			# We've already initialized all the internal dicts. Even though the
+			# current class might not be added even as a key, we better off just
+			# catching this case later, to make excluded classes truly excluded.
+			# So just finish now:
+			return cls
+
 		if cls not in children_dict:
 			children_dict[cls]: _t_track_set = set()
+		if cls not in parents_dict:
+			parents_dict[cls]: _t_track_set = set()
+		parents_set = parents_dict[cls]
 
 		for predefined_class, c_set in children_dict.items():
-			if issubclass(cls, predefined_class) and cls is not predefined_class:
+			if (
+				issubclass(cls, predefined_class) and cls is not predefined_class
+				and not is_excluded(cls) and not is_excluded(predefined_class)
+			):
 				c_set.add(cls)
+				parents_set.add(predefined_class)
 
 		return cls
 
 	@property
-	def _tracked_children(cls):
-		return tuple(cls.__children_by_class[cls])
+	def _class_children(cls):
+		try:
+			children_set = cls.__children_by_class[cls]
+		except KeyError:
+			default: _tpl[TrackingMeta, ...] = tuple()
+			return default
+		return tuple(children_set)
 
 	@property
-	def _whole_tracking(cls):
-		_t_track_set = _tpl[TrackingMeta, ...]
-		_t_track_hierarchy = _d[TrackingMeta, _t_track_set]
-		res: _t_track_hierarchy = {
-			k: tuple(v) for k, v in cls.__children_by_class.items()
-		}
-		return res
+	def _class_parents(cls):
+		try:
+			parents_set = cls.__parents_by_class[cls]
+		except KeyError:
+			default: _tpl[TrackingMeta, ...] = tuple()
+			return default
+		return tuple(parents_set)
+
+	# @property
+	# def _whole_tracking(cls):
+	# 	_t_track_set = _tpl[TrackingMeta, ...]
+	# 	_t_track_hierarchy = _d[TrackingMeta, _t_track_set]
+	# 	res: _t_track_hierarchy = {
+	# 		k: tuple(v) for k, v in cls.__children_by_class.items()
+	# 	}
+	# 	return res
 
 
-class TrackingABCMeta(_abc.ABCMeta, TrackingMeta):
+class TrackingABCMeta(TrackingMeta, _abc.ABCMeta):
 	"""Abstract meta-class which keeps track of all the classes inherited from it."""
 	pass
 

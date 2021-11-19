@@ -201,7 +201,7 @@ class ProxyPool(_TrackingABC, _StaticDataClass):
 	@classmethod
 	def __all_classes(cls, self=True):
 		"""All ``ProxyPool`` classes."""
-		classes: _i[_Tp[ProxyPool]] = cls._tracked_children
+		classes: _i[_Tp[ProxyPool]] = cls._class_children
 		if self:
 			classes = _chain([cls], classes)
 		return tuple(classes)
