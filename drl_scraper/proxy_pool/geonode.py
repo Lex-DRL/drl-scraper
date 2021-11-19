@@ -7,14 +7,12 @@ __author__ = 'Lex Darlog (DRL)'
 from datetime import datetime as _dt
 
 from pydantic import (
-	BaseModel as _BaseModel,
 	Field as _Field,
 	validator as _v,
 )
 
 from drl_pydantic import (
 	ValidatorsIfNot as _vNot,
-	v_func as _v_func,
 )
 
 from .__common import *
