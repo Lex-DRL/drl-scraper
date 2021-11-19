@@ -348,39 +348,42 @@ class UserAgentPool(_StaticDataClass, metaclass=_UserAgentPoolMeta):
 
 
 if __name__ == '__main__':
-	_test_n = 20
-	_best_n = UserAgentPool.flat_pool()[:_test_n]
-	print(f"{_test_n} most used agents:")
-	for _ua, _sys, _pc in _best_n:
-		print(f'{_pc:.2f}%\t{_ua}')
+	def __main_test():
+		test_n = 20
+		best_n = UserAgentPool.flat_pool()[:test_n]
+		print(f"{test_n} most used agents:")
+		for ua, sys, pc in best_n:
+			print(f'{pc:.2f}%\t{ua}')
 
-	print(f"\n{_test_n} most used systems:")
-	for _ua, _sys, _pc in _best_n:
-		print(f'{_pc:.2f}%\t{_sys}')
+		print(f"\n{test_n} most used systems:")
+		for ua, sys, pc in best_n:
+			print(f'{pc:.2f}%\t{sys}')
 
-	from timeit import timeit as _timeit
-	from collections import defaultdict as _defaultdict
+		from timeit import timeit
+		from collections import defaultdict
 
-	_test_n = 100000
-	_random_stats: _d[UserAgent, int] = _defaultdict(int)
+		test_n = 100000
+		random_stats: _d[UserAgent, int] = defaultdict(int)
 
-	def __query_random():
-		_random_stats[UserAgentPool.random] += 1
+		def __query_random():
+			random_stats[UserAgentPool.random] += 1
 
-	_time_took = _timeit(__query_random, number=_test_n)
-	_random_total = sum(_random_stats.values())
-	_results = sorted(
-		[
-			(100.0 * _hits / _random_total, _ua) for _ua, _hits in _random_stats.items()
-		],
-		reverse=True
-	)
-	_res_str = ',\n\t'.join(
-		f'{_pc:.2f}%:\t({_ua.user_agent!r}, {_ua.system!r}, {_ua.percent})'
-		for _pc, _ua in _results
-	)
+		time_took = timeit(__query_random, number=test_n)
+		random_total = sum(random_stats.values())
+		results = sorted(
+			[
+				(100.0 * _hits / random_total, _ua) for _ua, _hits in random_stats.items()
+			],
+			reverse=True
+		)
+		res_str = ',\n\t'.join(
+			f'{pc:.2f}%:\t({ua.user_agent!r}, {ua.system!r}, {ua.percent})'
+			for pc, ua in results
+		)
 
-	print(
-		f"\nReal destribution ({_test_n} random requests):\n\t{_res_str}"
-		f"\n\ntook: {_time_took} sec ({_test_n} random requests)."
-	)
+		print(
+			f"\nReal destribution ({test_n} random requests):\n\t{res_str}"
+			f"\n\ntook: {time_took} sec ({test_n} random requests)."
+		)
+
+	__main_test()
