@@ -94,7 +94,7 @@ _t_pool = _d[_str, UserAgentData]
 _t_pool_item = _tpl[_str, UserAgentData]
 
 
-class __UserAgentPoolMeta(type):
+class _UserAgentPoolMeta(type):
 	"""
 	Meta-class used to be able to have static properties and access class as dict
 	(user-agents as keys).
@@ -317,7 +317,7 @@ class __UserAgentPoolMeta(type):
 		return UserAgent(ua, cls.__map_to_sys[ua], cls.__map_to_percent[ua])
 
 
-class UserAgentPool(_StaticDataClass, metaclass=__UserAgentPoolMeta):
+class UserAgentPool(_StaticDataClass, metaclass=_UserAgentPoolMeta):
 	"""
 	Container class that provides user-agent strings on demand, with their
 	distribution matching real browser market share.
