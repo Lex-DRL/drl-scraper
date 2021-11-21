@@ -108,7 +108,7 @@ class GeoNodeProxyData(_SpecificPoolProxyData):
 
 
 class GeoNodeProxyPool(ProxyPool):
-	"""Pool of proxies taken from geonode.com"""
+	"""Pool of proxies taken from https://geonode.com/free-proxy-list"""
 
 	json_file_init = module_dir / 'geonode-init.json'
 	json_file_cache = module_dir / 'geonode-cache.json'

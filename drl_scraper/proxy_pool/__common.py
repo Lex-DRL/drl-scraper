@@ -2,6 +2,11 @@
 """
 """
 
+# TODO:
+# https://getproxylist.com/
+# https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all&ssl=all&anonymity=elite
+
+
 __author__ = 'Lex Darlog (DRL)'
 
 import abc as _abc
